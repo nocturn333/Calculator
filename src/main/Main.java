@@ -8,7 +8,7 @@ import parser.UnevenBracketsException;
 public class Main {
 
 	public static void main(String[] args) throws UnevenBracketsException {
-		String input = "(((1+1)+(0))";
+		String input = "(((1+1))+(0))";
 		Parser p = new Parser();
 		p.parse(input);
 	}
