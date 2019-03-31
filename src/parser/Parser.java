@@ -4,6 +4,7 @@ import java.util.Stack;
 
 public class Parser {
 
+	
 	public void parse(String input) throws UnevenBracketsException {
 		//System.out.println(input);
 		int len = input.length();
