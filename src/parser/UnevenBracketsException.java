@@ -1,6 +1,6 @@
 package parser;
 
-public class UnevenBracketsException extends Exception {
+public class UnevenBracketsException extends FunctionInputException {
 
 	/**
 	 * 
