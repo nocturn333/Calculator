@@ -4,6 +4,9 @@ import java.util.Stack;
 
 public class Parser {
 
+	String openBracket = "\\(.*";
+	String closedBracket = "\\).*";
+	
 	public void parse(String input) throws FunctionInputException {
 		System.out.println("source: " + input);
 		int len = input.length();
@@ -15,7 +18,7 @@ public class Parser {
 
 			switch (s) {
 			case "(":
-				int end = bracket(input, index);
+				int end = closeBracketIndex(input, index);
 				if (end < 0) {
 					throw new UnevenBracketsException("open");
 				}
@@ -36,7 +39,7 @@ public class Parser {
 		}
 	}
 
-	private int bracket(String input, int index) {
+	private int closeBracketIndex(String input, int index) {
 		int len = input.length();
 
 		Stack<Integer> b = new Stack<Integer>();

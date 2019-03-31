@@ -1,16 +1,22 @@
 package main;
 
+import java.util.regex.Matcher;
+
 import exp.functions.*;
 import exp.operators.*;
+import parser.FunctionInputException;
 import parser.Parser;
-import parser.UnevenBracketsException;
 
 public class Main {
 
-	public static void main(String[] args) throws UnevenBracketsException {
-		String input = "(((1+1))+(0))";
-		Parser p = new Parser();
-		p.parse(input);
+	public static void main(String[] args) throws FunctionInputException {
+		String input = ")(1+1)";
+		
+		System.out.println(input.matches("\\).*"));
+		
+//		Parser p = new Parser();
+//		p.parse(input);
+		
 	}
 }
 
