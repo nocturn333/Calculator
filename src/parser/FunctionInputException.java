@@ -2,7 +2,12 @@ package parser;
 
 
 public abstract class FunctionInputException extends Exception {
-	public FunctionInputException(String message) {
-		super(message);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public FunctionInputException(String message, String s) {
+		super(message+ " at: "+ s);
 	}
 }
