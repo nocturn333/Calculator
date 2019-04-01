@@ -3,24 +3,34 @@ package parser;
 import java.util.Stack;
 
 import exp.*;
+import exp.operators.*;
 
 public class Parser {
 
 	String openBracket = "^\\(.*";
 	String closedBracket = "^\\).*";
-	String number = "^-?\\d+.*";
+	String number = "^\\d+.*";
+
+	String varName = "";
 
 	public Expression parse(String input) throws FunctionInputException {
 		System.out.println("source: " + input);
-		Expression e = null;
+		Expression exp = null;
+		Operator op = null;
+
+		boolean expectExp = true;
+		//boolean expectVar = true;
 		boolean expectOp = false;
+		boolean expectExp2 = false;
+
+		boolean neg = false;
 
 		int len = input.length();
 		int index = 0;
 
 		while (index < len) {
 			String reading = input.substring(index, len);
-			System.out.println(reading);
+			System.out.println("currently reading: " + reading);
 
 			// open bracket
 			if (reading.matches(openBracket)) {
@@ -40,31 +50,63 @@ public class Parser {
 				throw new UnevenBracketsException("closed", reading);
 			}
 
+			// negative
+			if (reading.startsWith("-")) {
+				neg = true;
+				if (expectOp) {
+					op = new Sub();
+					op.setLeft(exp);
+					expectOp = false;
+					expectExp = true;
+					//expectVar = true;
+					expectExp2 = true;
+					neg=false;
+					System.out.println("set op -");
+				}
+			}
+
 			// number
 			if (reading.matches(number)) {
-				if (expectOp == false) {
+				if (expectExp) {
 					int end = numberEndIndex(reading);
-					System.out.println(end);
 					String d = reading.substring(0, end);
 					double number = Double.parseDouble(d);
-					System.out.println(number);
-					index = index + end;
+					if (neg) {
+						number = number * -1;
+					}
+					exp = new Num(number);
+					System.out.println(exp);
+
+					index = index + end-1;
+
+					neg = false;
+					expectExp = false;
 					expectOp = true;
+				} else {
+					throw new UnexpectedSymbolException(input.substring(index, index + 1), input);
 				}
-				else {
-					throw new UnexpectedSymbolException(input.substring(index, index+1), input);
-				}
+			}
+
+			if (expectExp2&&!expectExp) {
+				op.setRight(exp);
+				exp = op;
+				System.out.println("final:"+exp);
+				expectExp2 = false;
 			}
 
 			index++;
 		}
 
-		return e;
+		return exp;
 	}
 
 	private int numberEndIndex(String input) throws UnexpectedSymbolException {
 		int len = input.length();
 		int index = 0;
+
+//		if (input.startsWith("-")) {
+//			index = index + 1;
+//		}
 
 		boolean dec = false;
 
