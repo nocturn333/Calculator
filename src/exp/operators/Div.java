@@ -4,6 +4,11 @@ import exp.Expression;
 
 public class Div extends Operator {
 
+	public Div() {
+		super();
+		this.sign = "/";
+	}
+	
 	public Div(Expression e1, Expression e2) {
 		super(e1, e2);
 		this.sign = "/";

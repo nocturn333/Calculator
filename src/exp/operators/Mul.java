@@ -4,6 +4,11 @@ import exp.Expression;
 
 public class Mul extends Operator {
 
+	public Mul() {
+		super();
+		this.sign = "*";
+	}
+
 	public Mul(Expression e1, Expression e2) {
 		super(e1, e2);
 		this.sign = "*";
@@ -13,6 +18,5 @@ public class Mul extends Operator {
 	public double calculate(double x) {
 		return e1.calculate(x) * e2.calculate(x);
 	}
-
 
 }

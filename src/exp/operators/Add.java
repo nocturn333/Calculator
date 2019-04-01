@@ -4,6 +4,11 @@ import exp.Expression;
 
 public class Add extends Operator {
 
+	public Add() {
+		super();
+		this.sign = "+";
+	}
+	
 	public Add(Expression e1, Expression e2) {
 		super(e1, e2);
 		this.sign = "+";
