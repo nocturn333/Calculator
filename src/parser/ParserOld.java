@@ -5,25 +5,23 @@ import java.util.Stack;
 import exp.*;
 import exp.operators.*;
 
-public class Parser {
+public class ParserOld {
 
 	String openBracket = "^\\(.*";
 	String closedBracket = "^\\).*";
-	String number = "^\\d+.*";
+	String number = "^\\-?[\\d]*\\.?[\\d]+$";
 
+	String add = ".+\\+.+";
+	String sub = ".+\\-.+";	
+	String mul = ".+\\*.+";
+	String div = ".+\\/.+";
+	
+	
 	String varName = "";
 
 	public Expression parse(String input) throws FunctionInputException {
 		System.out.println("source: " + input);
 		Expression exp = null;
-		Operator op = null;
-
-		boolean expectExp = true;
-		//boolean expectVar = true;
-		boolean expectOp = false;
-		boolean expectExp2 = false;
-
-		boolean neg = false;
 
 		int len = input.length();
 		int index = 0;
@@ -37,65 +35,46 @@ public class Parser {
 				int end = closeBracketIndex(reading);
 
 				if (end < 0) {
-					throw new UnevenBracketsException("open", reading);
+					//throw new UnevenBracketsException("open", reading);
 				}
 				String inner = reading.substring(1, end);
 				System.out.println("inner: " + inner);
-				parse(inner);
+				exp = parse(inner);
+
 				index = index + end;
 			}
 
 			// closed bracket
 			if (reading.matches(closedBracket)) {
-				throw new UnevenBracketsException("closed", reading);
+				//throw new UnevenBracketsException("closed", reading);
 			}
 
-			// negative
-			if (reading.startsWith("-")) {
-				neg = true;
-				if (expectOp) {
-					op = new Sub();
-					op.setLeft(exp);
-					expectOp = false;
-					expectExp = true;
-					//expectVar = true;
-					expectExp2 = true;
-					neg=false;
-					System.out.println("set op -");
-				}
+			if(reading.startsWith("*")) {
+				
 			}
-
+			
+			
 			// number
 			if (reading.matches(number)) {
-				if (expectExp) {
-					int end = numberEndIndex(reading);
-					String d = reading.substring(0, end);
-					double number = Double.parseDouble(d);
-					if (neg) {
-						number = number * -1;
-					}
-					exp = new Num(number);
-					System.out.println(exp);
 
-					index = index + end-1;
+				int end = numberEndIndex(reading);
+				String d = reading.substring(0, end);
+				double number = Double.parseDouble(d);
 
-					neg = false;
-					expectExp = false;
-					expectOp = true;
-				} else {
-					throw new UnexpectedSymbolException(input.substring(index, index + 1), input);
-				}
-			}
+				exp = new Num(number);
+				System.out.println(exp);
 
-			if (expectExp2&&!expectExp) {
-				op.setRight(exp);
-				exp = op;
-				System.out.println("final:"+exp);
-				expectExp2 = false;
+				index = index + end - 1;
 			}
 
 			index++;
 		}
+
+		return exp;
+	}
+
+	private Expression operation(String symbol, String input) {
+		Expression exp = null;
 
 		return exp;
 	}
@@ -118,7 +97,7 @@ public class Parser {
 					dec = true;
 					index++;
 				} else {
-					throw new UnexpectedSymbolException(".", input);
+					//throw new UnexpectedSymbolException(".", input);
 				}
 			} else if (s.matches("\\d")) {
 				index++;
